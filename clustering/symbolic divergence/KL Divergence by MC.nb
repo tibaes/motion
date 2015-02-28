@@ -1,0 +1,296 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      9757,        286]
+NotebookOptionsPosition[      9119,        261]
+NotebookOutlinePosition[      9480,        277]
+CellTagsIndexPosition[      9437,        274]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"file1", " ", "=", " ", "\"\<~/Desktop/cima0.txt\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"file2", " ", "=", " ", "\"\<~/Desktop/cima1.txt\>\""}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ksize", " ", "=", " ", "50"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"samplecount", " ", "=", " ", "2000"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.625324491919383*^9, 3.625324512547859*^9}, {
+  3.625324601828725*^9, 3.6253246181921988`*^9}, {3.625324691532115*^9, 
+  3.62532469488055*^9}, {3.625325492502655*^9, 3.625325497751586*^9}, {
+  3.625325815427393*^9, 3.6253258241675243`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"data1", " ", "=", " ", 
+   RowBox[{"Import", "[", 
+    RowBox[{"file1", ",", "\"\<Table\>\""}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"data2", " ", "=", " ", 
+   RowBox[{"Import", "[", 
+    RowBox[{"file2", ",", "\"\<Table\>\""}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.625324697418314*^9, 3.625324715798552*^9}, {
+  3.625324749546794*^9, 3.625324758090784*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Symbolic", " ", "Component", " ", "Distribution"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"computeDistThread", "[", "d_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{"MultinormalDistribution", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"\[Mu]0", ",", "\[Mu]1", ",", "\[Mu]2", ",", "\[Mu]3"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+          "\[Sigma]00", ",", "\[Sigma]01", ",", "\[Sigma]02", ",", 
+           "\[Sigma]03"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+          "\[Sigma]10", ",", "\[Sigma]11", ",", "\[Sigma]12", ",", 
+           "\[Sigma]13"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+          "\[Sigma]20", ",", "\[Sigma]21", ",", "\[Sigma]22", ",", 
+           "\[Sigma]23"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+          "\[Sigma]30", ",", "\[Sigma]31", ",", "\[Sigma]32", ",", 
+           "\[Sigma]33"}], "}"}]}], "}"}]}], "]"}], "/.", 
+     RowBox[{"Thread", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "\[Mu]0", ",", "\[Mu]1", ",", "\[Mu]2", ",", "\[Mu]3", ",", 
+         "\[Sigma]00", ",", "\[Sigma]01", ",", "\[Sigma]02", ",", 
+         "\[Sigma]03", ",", "\[Sigma]10", ",", "\[Sigma]11", ",", 
+         "\[Sigma]12", ",", "\[Sigma]13", ",", "\[Sigma]20", ",", 
+         "\[Sigma]21", ",", "\[Sigma]22", ",", "\[Sigma]23", ",", 
+         "\[Sigma]30", ",", "\[Sigma]31", ",", "\[Sigma]32", ",", 
+         "\[Sigma]33"}], "}"}], "\[Rule]", " ", "d"}], "]"}]}]}], 
+   ";"}]}]], "Input",
+ CellChangeTimes->{{3.6253251417072697`*^9, 3.625325205117485*^9}, {
+  3.625325349225051*^9, 3.6253253502667522`*^9}, {3.62532540310398*^9, 
+  3.625325427429254*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"compList1", " ", "=", " ", 
+   RowBox[{"ParallelMap", "[", 
+    RowBox[{"computeDistThread", ",", "data1"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"compList2", " ", "=", " ", 
+   RowBox[{"ParallelMap", "[", 
+    RowBox[{"computeDistThread", ",", "data2"}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6253250274776993`*^9, 3.625325034668783*^9}, {
+  3.625325364604826*^9, 3.625325389140575*^9}, {3.625325437354763*^9, 
+  3.625325479308344*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"weights", "=", 
+   RowBox[{"ConstantArray", "[", 
+    RowBox[{
+     RowBox[{"1.", "/", "ksize"}], ",", "ksize"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"gmm0", " ", "=", " ", 
+   RowBox[{"MixtureDistribution", "[", 
+    RowBox[{"weights", ",", "compList1"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"gmm1", " ", "=", " ", 
+   RowBox[{"MixtureDistribution", "[", 
+    RowBox[{"weights", ",", "compList2"}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6253255233693123`*^9, 3.625325542498068*^9}, {
+  3.625325579266473*^9, 3.625325630600613*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"p0", " ", "=", " ", 
+   RowBox[{"Compile", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"x1", ",", " ", "_Real"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x2", ",", "_Real"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x3", ",", "_Real"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x4", ",", "_Real"}], "}"}]}], "}"}], ",", " ", 
+     RowBox[{"PDF", "[", 
+      RowBox[{"gmm0", ",", 
+       RowBox[{"{", 
+        RowBox[{"x1", ",", "x2", ",", "x3", ",", "x4"}], "}"}]}], "]"}], ",", 
+     " ", "\[IndentingNewLine]", 
+     RowBox[{"RuntimeAttributes", "\[Rule]", 
+      RowBox[{"{", "Listable", "}"}]}], ",", " ", 
+     RowBox[{"CompilationOptions", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<InlineExternalDefinitions\>\"", " ", "->", " ", "True"}], 
+       "}"}]}], ",", " ", 
+     RowBox[{"CompilationTarget", "\[Rule]", "\"\<C\>\""}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"p1", " ", "=", " ", 
+   RowBox[{"Compile", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"x1", ",", " ", "_Real"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x2", ",", "_Real"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x3", ",", "_Real"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"x4", ",", "_Real"}], "}"}]}], "}"}], ",", " ", 
+     RowBox[{"PDF", "[", 
+      RowBox[{"gmm1", ",", 
+       RowBox[{"{", 
+        RowBox[{"x1", ",", "x2", ",", "x3", ",", "x4"}], "}"}]}], "]"}], ",", 
+     " ", "\[IndentingNewLine]", 
+     RowBox[{"RuntimeAttributes", "\[Rule]", 
+      RowBox[{"{", "Listable", "}"}]}], ",", " ", 
+     RowBox[{"CompilationOptions", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<InlineExternalDefinitions\>\"", " ", "->", " ", "True"}], 
+       "}"}]}], ",", " ", 
+     RowBox[{"CompilationTarget", "\[Rule]", "\"\<C\>\""}]}], "]"}]}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.625325661105679*^9, 3.625325741283106*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"sample", " ", "=", " ", 
+   RowBox[{"RandomVariate", "[", 
+    RowBox[{"gmm0", ",", "samplecount"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.625325847157454*^9, 3.625325860536436*^9}, 
+   3.625325915163126*^9}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ps0", " ", "=", " ", 
+   RowBox[{"p0", "@@@", "sample"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ps1", " ", "=", " ", 
+   RowBox[{"p1", "@@@", "sample"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.625325943117855*^9, 3.625325963249447*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"KL", " ", "Divergence", " ", "by", " ", "Monte", " ", "Carlo"}], 
+   " ", "*)"}], " ", "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"innerKL", "[", 
+      RowBox[{"x_", ",", "y_"}], "]"}], " ", ":=", " ", 
+     RowBox[{
+      RowBox[{"Abs", "[", "x", "]"}], " ", "*", " ", 
+      RowBox[{"Log", "[", 
+       RowBox[{"2", ",", " ", 
+        RowBox[{"Abs", "[", 
+         RowBox[{"x", " ", "/", " ", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"y", "\[NotEqual]", "0"}], ",", "y", ",", "1.*^-10"}], 
+           "]"}]}], "]"}]}], "]"}]}]}], ";"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"innerKL", "[", 
+      RowBox[{"x_", ",", "y_"}], "]"}], " ", ":=", " ", 
+     RowBox[{"Log", "[", 
+      RowBox[{"2", ",", " ", 
+       RowBox[{"Abs", "[", 
+        RowBox[{"x", " ", "/", " ", 
+         RowBox[{"If", "[", 
+          RowBox[{
+           RowBox[{"y", "\[NotEqual]", "0"}], ",", "y", ",", "1.*^-16"}], 
+          "]"}]}], "]"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"kl", "=", " ", 
+     RowBox[{
+      RowBox[{"Sum", "[", 
+       RowBox[{
+        RowBox[{"innerKL", "[", 
+         RowBox[{
+          RowBox[{"ps0", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], ",", " ", 
+          RowBox[{"ps1", "[", 
+           RowBox[{"[", "i", "]"}], "]"}]}], "]"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", " ", "1", ",", " ", "samplecount"}], "}"}]}], 
+       "]"}], " ", "/", " ", "samplecount"}]}], ";"}], "\[IndentingNewLine]", 
+   "kl"}]}]], "Input",
+ CellChangeTimes->{{3.625326197967351*^9, 3.625326205985128*^9}, {
+  3.6253262475894547`*^9, 3.625326321736788*^9}}],
+
+Cell[BoxData["0.04738193134896704`"], "Output",
+ CellChangeTimes->{3.6253263228653517`*^9}]
+}, Open  ]]
+},
+WindowSize->{1369, 894},
+WindowMargins->{{Automatic, 109}, {Automatic, 292}},
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (September 9, \
+2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 659, 14, 80, "Input"],
+Cell[1220, 36, 433, 11, 46, "Input"],
+Cell[1656, 49, 1819, 46, 63, "Input"],
+Cell[3478, 97, 510, 12, 46, "Input"],
+Cell[3991, 111, 613, 16, 63, "Input"],
+Cell[4607, 129, 2041, 55, 80, "Input"],
+Cell[6651, 186, 253, 6, 28, "Input"],
+Cell[6907, 194, 291, 7, 46, "Input"],
+Cell[CellGroupData[{
+Cell[7223, 205, 1786, 50, 97, "Input"],
+Cell[9012, 257, 91, 1, 28, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

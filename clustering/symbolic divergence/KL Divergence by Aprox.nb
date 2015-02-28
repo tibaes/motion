@@ -1,0 +1,305 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     10423,        296]
+NotebookOptionsPosition[      9897,        274]
+NotebookOutlinePosition[     10256,        290]
+CellTagsIndexPosition[     10213,        287]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Kullback", "-", 
+    RowBox[{
+    "Liebler", " ", "divergence", " ", "using", " ", "Variational", " ", 
+     "approximation"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"dsize", " ", "=", " ", "4"}], ";", " ", 
+    RowBox[{"(*", " ", 
+     RowBox[{"x", ",", "y", ",", "u", ",", "v"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{"file1", " ", "=", " ", "\"\<~/Desktop/cima0.txt\>\""}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"file2", " ", "=", " ", "\"\<~/Desktop/cima1.txt\>\""}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.625324491919383*^9, 3.625324512547859*^9}, {
+  3.625324601828725*^9, 3.6253246181921988`*^9}, {3.625324691532115*^9, 
+  3.62532469488055*^9}, {3.625325492502655*^9, 3.625325497751586*^9}, {
+  3.625325815427393*^9, 3.6253258241675243`*^9}, {3.625843554914056*^9, 
+  3.625843641294181*^9}, {3.6258440966435432`*^9, 3.6258441526972933`*^9}, {
+  3.625844987142931*^9, 3.625844987561185*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"data1", " ", "=", " ", 
+   RowBox[{"Import", "[", 
+    RowBox[{"file1", ",", "\"\<Table\>\""}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"data2", " ", "=", " ", 
+   RowBox[{"Import", "[", 
+    RowBox[{"file2", ",", "\"\<Table\>\""}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.6258436273162003`*^9, 3.625843630118064*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Symbolic", " ", "Component", " ", "Distribution"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"computeDistThread", "[", "d_", "]"}], ":=", 
+    RowBox[{
+     RowBox[{"MultinormalDistribution", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"\[Mu]0", ",", "\[Mu]1", ",", "\[Mu]2", ",", "\[Mu]3"}], 
+        "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+          "\[Sigma]00", ",", "\[Sigma]01", ",", "\[Sigma]02", ",", 
+           "\[Sigma]03"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+          "\[Sigma]10", ",", "\[Sigma]11", ",", "\[Sigma]12", ",", 
+           "\[Sigma]13"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+          "\[Sigma]20", ",", "\[Sigma]21", ",", "\[Sigma]22", ",", 
+           "\[Sigma]23"}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+          "\[Sigma]30", ",", "\[Sigma]31", ",", "\[Sigma]32", ",", 
+           "\[Sigma]33"}], "}"}]}], "}"}]}], "]"}], "/.", 
+     RowBox[{"Thread", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "\[Mu]0", ",", "\[Mu]1", ",", "\[Mu]2", ",", "\[Mu]3", ",", 
+         "\[Sigma]00", ",", "\[Sigma]01", ",", "\[Sigma]02", ",", 
+         "\[Sigma]03", ",", "\[Sigma]10", ",", "\[Sigma]11", ",", 
+         "\[Sigma]12", ",", "\[Sigma]13", ",", "\[Sigma]20", ",", 
+         "\[Sigma]21", ",", "\[Sigma]22", ",", "\[Sigma]23", ",", 
+         "\[Sigma]30", ",", "\[Sigma]31", ",", "\[Sigma]32", ",", 
+         "\[Sigma]33"}], "}"}], "\[Rule]", " ", "d"}], "]"}]}]}], 
+   ";"}]}]], "Input",
+ CellChangeTimes->{{3.6253251417072697`*^9, 3.625325205117485*^9}, {
+  3.625325349225051*^9, 3.6253253502667522`*^9}, {3.62532540310398*^9, 
+  3.625325427429254*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Gaussian", " ", "components", " ", "from", " ", "both", " ", "motion", 
+    " ", "mixtures"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"compSize1", " ", "=", " ", 
+     RowBox[{"Length", "[", "data1", "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"compSize2", " ", "=", " ", 
+     RowBox[{"Length", "[", "data2", "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"weights1", "=", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{
+       RowBox[{"1.", "/", "compSize1"}], ",", "compSize1"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"weights2", "=", 
+     RowBox[{"ConstantArray", "[", 
+      RowBox[{
+       RowBox[{"1.", "/", "compSize2"}], ",", "compSize2"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"compList1", " ", "=", " ", 
+     RowBox[{"Map", "[", 
+      RowBox[{"computeDistThread", ",", "data1"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"compList2", " ", "=", " ", 
+     RowBox[{"Map", "[", 
+      RowBox[{"computeDistThread", ",", "data2"}], "]"}]}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.6253250274776993`*^9, 3.625325034668783*^9}, {
+  3.625325364604826*^9, 3.625325389140575*^9}, {3.625325437354763*^9, 
+  3.625325479308344*^9}, {3.625843733384676*^9, 3.6258437760090103`*^9}, {
+  3.625843837529353*^9, 3.625843852543284*^9}, {3.625843893319556*^9, 
+  3.625843894423368*^9}, {3.625844176248036*^9, 3.625844201963497*^9}, {
+  3.625845006374443*^9, 3.625845052039824*^9}, {3.6258468351794863`*^9, 
+  3.62584683807722*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Kullback", "-", 
+    RowBox[{
+    "Liebler", " ", "between", " ", "two", " ", "Gaussian", " ", 
+     "components"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"klc", "[", 
+     RowBox[{"g0_", ",", "g1_", ",", "d_"}], "]"}], ":=", 
+    RowBox[{".5", " ", "*", " ", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"Log", "[", 
+        RowBox[{
+         RowBox[{"Det", "[", 
+          RowBox[{"Covariance", "[", "g1", "]"}], "]"}], " ", "/", " ", 
+         RowBox[{"Det", "[", 
+          RowBox[{"Covariance", "[", "g0", "]"}], "]"}]}], "]"}], " ", "+", 
+       " ", 
+       RowBox[{"Tr", "[", 
+        RowBox[{
+         RowBox[{"Inverse", "[", 
+          RowBox[{"Covariance", "[", "g1", "]"}], "]"}], " ", ".", " ", 
+         RowBox[{"Covariance", "[", "g0", "]"}]}], "]"}], "-", "d", "+", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{
+          RowBox[{"Mean", "[", "g0", "]"}], "-", 
+          RowBox[{"Mean", "[", "g1", "]"}]}], "}"}], ".", 
+        RowBox[{"Inverse", "[", 
+         RowBox[{"Covariance", "[", "g1", "]"}], "]"}], ".", 
+        RowBox[{"Transpose", "[", 
+         RowBox[{"{", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"Mean", "[", "g0", "]"}], "-", 
+            RowBox[{"Mean", "[", "g1", "]"}]}], ")"}], "}"}], "]"}]}]}], 
+      ")"}]}]}], ";"}]}]], "Input",
+ CellChangeTimes->{{3.62584391168113*^9, 3.6258439363914433`*^9}, {
+  3.625844268547155*^9, 3.6258443150258083`*^9}, {3.6258447307463903`*^9, 
+  3.625844740501811*^9}, {3.625846063186912*^9, 3.625846068644288*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{"Kullback", "-", 
+    RowBox[{
+    "Liebler", " ", "using", " ", "Variational", " ", "approximation"}]}], 
+   " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+     RowBox[{"kl2", "[", "a_", "]"}], ":=", 
+     RowBox[{"Sum", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"weights2", "[", 
+         RowBox[{"[", "b", "]"}], "]"}], "*", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"-", "1"}], "*", 
+          RowBox[{"klc", "[", 
+           RowBox[{
+            RowBox[{"compList1", "[", 
+             RowBox[{"[", "a", "]"}], "]"}], ",", 
+            RowBox[{"compList2", "[", 
+             RowBox[{"[", "b", "]"}], "]"}], ",", "dsize"}], "]"}]}], "]"}]}],
+        ",", 
+       RowBox[{"{", 
+        RowBox[{"b", ",", "1", ",", "compSize2"}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"kl1", "[", "a_", "]"}], ":=", 
+     RowBox[{"Sum", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"weights1", "[", 
+         RowBox[{"[", "b", "]"}], "]"}], "*", 
+        RowBox[{"Exp", "[", 
+         RowBox[{
+          RowBox[{"-", "1"}], "*", 
+          RowBox[{"klc", "[", 
+           RowBox[{
+            RowBox[{"compList1", "[", 
+             RowBox[{"[", "a", "]"}], "]"}], ",", 
+            RowBox[{"compList1", "[", 
+             RowBox[{"[", "b", "]"}], "]"}], ",", "dsize"}], "]"}]}], "]"}]}],
+        ",", 
+       RowBox[{"{", 
+        RowBox[{"b", ",", "1", ",", "compSize1"}], "}"}]}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"klv", "=", 
+    RowBox[{"AbsoluteTiming", "[", 
+     RowBox[{"Abs", "[", 
+      RowBox[{"ParallelSum", "[", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"weights1", "[", 
+          RowBox[{"[", "a", "]"}], "]"}], "*", 
+         RowBox[{"Log", "[", 
+          RowBox[{
+           RowBox[{"kl1", "[", "a", "]"}], "/", 
+           RowBox[{"kl2", "[", "a", "]"}]}], "]"}]}], ",", 
+        RowBox[{"{", 
+         RowBox[{"a", ",", "1", ",", "compSize1"}], "}"}]}], "]"}], "]"}], 
+     "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.625845955071631*^9, 3.625846045947304*^9}, {
+  3.625846126679343*^9, 3.625846148890293*^9}, {3.625846206227953*^9, 
+  3.625846247860915*^9}, {3.625846349910404*^9, 3.625846422600142*^9}, {
+  3.62584645456847*^9, 3.625846458172955*^9}, {3.6258466730900297`*^9, 
+  3.625846715526626*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"1.32174799999999992294874573417473584414`6.141748575205556", ",", 
+   RowBox[{"{", 
+    RowBox[{"{", "0.03216756807633586`", "}"}], "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.6258464335055532`*^9, 3.625846463478878*^9}, {
+   3.6258466838232527`*^9, 3.6258467277421007`*^9}, 3.625846847002119*^9}]
+}, Open  ]]
+},
+WindowSize->{1337, 753},
+WindowMargins->{{15, Automatic}, {11, Automatic}},
+FrontEndVersion->"10.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (September 9, \
+2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 1038, 23, 80, "Input"],
+Cell[1599, 45, 386, 10, 46, "Input"],
+Cell[1988, 57, 1819, 46, 63, "Input"],
+Cell[3810, 105, 1656, 41, 131, "Input"],
+Cell[5469, 148, 1620, 42, 80, "Input"],
+Cell[CellGroupData[{
+Cell[7114, 194, 2422, 69, 80, "Input"],
+Cell[9539, 265, 342, 6, 86, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
